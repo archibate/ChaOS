@@ -1,4 +1,5 @@
-WIN=1
+#WIN=1
+WINQEMU=1
 
 .PHONY: all
 all: $(ALL)

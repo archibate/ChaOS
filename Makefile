@@ -5,8 +5,12 @@ DIRS=boot kern libc libcon
 
 .PHONY: run
 run: chaos.img
+ifdef WINQEMU
 	cp $< z_tools/qemu/fdimage0.bin
 	make -C z_tools/qemu
+else
+	qemu-system-i386 -m 32 -localtime -std-vga -fda $<
+endif
 
 .PHONY: bochsrun
 bochsrun: chaos.img
@@ -23,7 +27,7 @@ else
 	cat $^ > $@
 endif
 
-#kern/kernel.bin: libc/libc.a libvgacon/libcon.a
+#kern/kernel.bin: libc/libc.a libcon/libcon.a init/init.bin
 
 .PHONY: $(foreach x, $(DIRS), $x/ $x/*)
 $(foreach x, $(DIRS), $x/%):
