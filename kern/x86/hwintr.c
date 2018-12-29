@@ -30,9 +30,10 @@ void hwintr(struct iframe *iframe)
 		}
 	}
 	
-	if (n == INTR_SWI0)
+	if (n >= INTR_SWI0 && n < INTR_SWIMAX)
 	{
-		iframe->ax = system_call(iframe->ax, iframe->cx, iframe->dx);
+		uint nr = n - INTR_SWI0;
+		iframe->ax = system_call(nr, iframe->ax, iframe->cx, iframe->dx);
 		return;
 	}
 	

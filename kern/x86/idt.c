@@ -11,7 +11,7 @@ void init_idt(void)
 	
 	for (i = 0; i < NIDT_ENTS; i++)
 	{
-		int dpl = i == INTR_SWI0 ? 3 : 0;
+		int dpl = i >= INTR_SWI0 && i < INTR_SWIMAX ? 3 : 0;
 		SETGATE(idt[i], 0, SEG_KCODE, __intrents[i], dpl);
 	}
 	
