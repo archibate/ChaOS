@@ -2,8 +2,8 @@
 #include <mm/pmm.h>
 #include <memory.h>
 #include <mm/kbase.h>
-#include <printk.h>
-#include <assert.h>
+//#include <printk.h>
+//#include <assert.h>
 
 #define alloc_ppt() zalloc_ppage()
 
@@ -40,21 +40,21 @@ pte_t pd_map(pde_t *pd, pgva_t va, pte_t pte)
 	if (!PDE_VALID(pde))
 	{
 		ppt = alloc_ppt();
-		printk("allocated: ppt=%p", ppt);
+		//printk("allocated: ppt=%p", ppt);
 		pde = ppt | PDE_P | PDE_W | PDE_U;
 		pd[PDI(va)] = pde;
 	}
 	else
 	{
 		ppt = PDE_PA(pde);
-		printk("already: ppt=%p", ppt);
+		//printk("already: ppt=%p", ppt);
 	}
 	
 	pte_t *pt = (pte_t*)KP2V(ppt);
 	pte_t old_pte = pt[PTI(va)];
 	pt[PTI(va)] = pte;
 	
-	printk("va=%p, pde=%p, pte=%p setted", va, pde, pte);
+	//printk("va=%p, pde=%p, pte=%p setted", va, pde, pte);
 	
 	return old_pte;
 }

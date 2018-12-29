@@ -9,6 +9,7 @@ void kern_main(void)
 {
 	CALL(init_vga);
 	cputs("done\n\n");
+	printk(KL_INFO "starting version 001");
 	
 	printk(KL_INFO "init_meminfo");
 	CALL(init_meminfo);
@@ -26,8 +27,6 @@ void kern_main(void)
 	CALL(init_pmm);
 	printk(KL_INFO "init_user");
 	CALL(init_user);
-	
-	printk(KL_INFO "Hello world from kernel!");
 	
 	printk(KL_INFO "entering idle loop");
 	for (;;)

@@ -14,10 +14,7 @@ void transfer_to_user(ulong pc, ulong sp)
 	ifr.es = ifr.ds = ifr.ss;
 	ifr.pc = pc;
 	ifr.sp = sp;
-	ifr.eflags = FL_1F;
-	
-	*(volatile int*)pc;
-	printk("transter_to_user...");
+	ifr.eflags = FL_1F | FL_IOPL(3);
 	
 	ulong ksp;
 	asm volatile ("mov %%esp, %0" : "=r" (ksp) :);

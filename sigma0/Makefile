@@ -1,8 +1,8 @@
 D=../
 ALL=sigma0.bin
-LIBS=gcc c con
+LIBS=gcc con c
 include $Dbeg.mak
-OBJS=x86/entry.o
+OBJS=x86/entry.o main.o drv/vga.o
 
 sigma0.bin: sigma0.sys
 	$(OBJCOPY) -O binary $< $@

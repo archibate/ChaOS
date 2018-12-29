@@ -3,10 +3,10 @@
 %include "cext.inc"
 
 	GLOBAL  _start
+	EXTERNC	sigma0_main
 
 [SECTION .text]
 [BITS 32]
 _start:
-	cli
-	hlt
+	call sigma0_main
 	jmp $

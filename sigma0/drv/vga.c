@@ -1,7 +1,7 @@
 #include <console.h>
 #include <conio.h>
 #include <x86/io.h>
-#include <mm/kbase.h>
+#include <drv/vga.h>
 #include <div.h>
 
 #define IO_VGA_CRT  0x3d4
@@ -32,12 +32,12 @@ static void vga_con_leave(struct console *con)
 
 static struct console vga_con;
 
-void init_vga(void)
+void setup_vga_console(struct con_char *vga_buf)
 {
-	vga_con.buf = (struct con_char *)KP2V(0xb8000);
+	vga_con.buf = vga_buf;
 	vga_con.scrnx = 80;
 	vga_con.scrny = 25;
-	vga_con.enter = vga_con_enter;
+	vga_con.enter = unused_con_enter;
 	vga_con.leave = vga_con_leave;
 	con_init(&vga_con);
 	vga_con_enter(&vga_con);
