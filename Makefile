@@ -1,7 +1,7 @@
 D=./
 ALL=chaos.img
 include $Dbeg.mak
-DIRS=boot kern sigma0 libc libcon
+DIRS=boot sigma0 kern libc libcon
 
 .PHONY: run
 run: chaos.img
