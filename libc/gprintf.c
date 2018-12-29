@@ -4,8 +4,12 @@
 #include <wcsing.h>
 #include <strerr.h>
 #include <memory.h>
-#include <div.h>
 #include <atoi.h>
+#include <div.h>
+#include <ccutils.h>
+#ifdef _CC_HAS_ALLOCA
+#include <alloca.h>
+#endif
 
 
 static
@@ -17,7 +21,12 @@ void _geutoa
 	, unsigned long len
 	)
 {
-	char buf[len], *p = buf + len;
+#ifdef _CC_HAS_ALLOCA
+	char *buf = alloca(len);
+#else
+	char buf[40];
+#endif
+	char *p = buf + len;
 	div_t d;
 	do {
 		d = div(u, base);

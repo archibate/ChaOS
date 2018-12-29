@@ -2,10 +2,12 @@
 
 %include "cext.inc"
 
-	GLOBALC initrd_beg
-	GLOBALC initrd_end
+	GLOBALC sigma0_beg
+	GLOBALC sigma0_end
 
 [SECTION .data]
-initrd_beg:
-	incbin "../init/init.bin"
-initrd_end:
+	alignb 4096
+sigma0_beg:
+	incbin "../sigma0/sigma0.bin"
+	alignb 4096
+sigma0_end:

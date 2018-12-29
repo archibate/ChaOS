@@ -6,5 +6,6 @@
 #include <concolor.h>
 
 #define _PANIC_PREFIX KL_PANIC "PANIC: "
-#define panic(...) do { printk(_PANIC_PREFIX __VA_ARGS__); clihlt(); } while (0)
-	
+#define panic(...) do { \
+	printk(_PANIC_PREFIX __VA_ARGS__); \
+	clihlt(); } while (0)

@@ -1,5 +1,5 @@
 #WIN=1
-WINQEMU=1
+#WINQEMU=1
 
 .PHONY: all
 all: $(ALL)
@@ -17,14 +17,14 @@ MODES+=32 arch=i386 soft-float
 FUNCTIONS+=no-common no-exceptions no-non-call-exceptions freestanding no-builtin
 WARNINGS+=all no-unused-function implicit-function-declaration
 INCPATH+=. $Dlibc $Dlibcon $Dinclude
-LIBPATH+=$Dlibc
+LIBPATH+=$Dlibgcc $Dlibc $Dlibcon
 
-ifndef WIN
-FUNCTIONS+=no-stack-protector
-WARNINGS+=no-error=unused-variable no-error=unused-but-set-variable
-else
-DEFINES+=_MINGW=1
-endif
+#ifndef WIN
+#FUNCTIONS+=no-stack-protector
+#WARNINGS+=no-error=unused-variable no-error=unused-but-set-variable
+#else
+#DEFINES+=_MINGW=1
+#endif
 
 CCFLAGS+=-nostdinc
 CCFLAGS+=$(OPTIMIZE:%=-O%) $(MODES:%=-m%) \
@@ -32,7 +32,7 @@ CCFLAGS+=$(OPTIMIZE:%=-O%) $(MODES:%=-m%) \
 		$(DEFINES:%=-D%) $(INCPATH:%=-I%)
 ASMFLAGS+=$(INCPATH:%=-I%/)
 LDFLAGS+=-s -static -nostdlib
-LDFLAGS+=$(LIBPATH:%=-L%) $(LIBS:%=-l%)
+LDFLAGS+=$(LIBPATH:%=-L%)
 CFLAGS=$(CCFLAGS) $(LDFLAGS)
 
 # compiling rules:

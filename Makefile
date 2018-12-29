@@ -1,7 +1,7 @@
 D=./
 ALL=chaos.img
 include $Dbeg.mak
-DIRS=boot kern libc libcon
+DIRS=boot kern sigma0 libc libcon
 
 .PHONY: run
 run: chaos.img
@@ -9,7 +9,7 @@ ifdef WINQEMU
 	cp $< z_tools/qemu/fdimage0.bin
 	make -C z_tools/qemu
 else
-	qemu-system-i386 -m 32 -localtime -std-vga -fda $<
+	qemu-system-x86_64 -m 32 -boot a -fda $<
 endif
 
 .PHONY: bochsrun

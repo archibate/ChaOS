@@ -2,11 +2,10 @@
 
 #include <mm/page.h>
 #include <tol/pool.h>
+#include <mm/kbase.h>
 
-#define PPM_NPAGES 256
+#define PPM_NPAGES ((PPMAXEND - PPMBEG) / PGSIZE)
 
-typedef STATIC_POOL_TYPE(pa_t, PPM_NPAGES, ppm_pool_struct) __ppm_pool_t;
-extern __ppm_pool_t _pmm_pool;
-
-#define alloc_ppage()	pool_alloc(&_pmm_pool)
-#define free_ppage(pa)	pool_free(&_pmm_pool, pa)
+pa_t alloc_ppage(void);
+pa_t zalloc_ppage(void);
+void free_ppage(pa_t pa);

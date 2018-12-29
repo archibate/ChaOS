@@ -16,11 +16,15 @@ memory_test:
 	push ebx
 	mov ebx, [ebp +  8] ; p_start
 	mov edi, [ebp + 12] ; p_size
-	mov esi, [edi]
-	mov edx, [ebx]
+	mov esi, [ebx]
+	mov edx, [edi]
+	push edi
+	push ebx
 	call probeRAM
-	mov [edi], esi
-	mov [ebx], ecx
+	pop ebx
+	pop edi
+	mov [ebx], esi
+	mov [edi], ecx
 	pop ebx
 	pop edi
 	pop esi

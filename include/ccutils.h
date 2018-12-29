@@ -1,29 +1,49 @@
 #pragma once
 
-#ifdef __GNUC__
-#define __ATTRIBUTE(...)	__attribute__((__VA_ARGS__))
+#if defined __GNUC__
+#define __DECLSPEC(...)	__attribute__((__VA_ARGS__))
+#define __PRAGMA(...)	/* nothing */
+#define __BUILTIN(x)	__builtin_##x
+#elif defined MSC_VER || defined _MSC_VER
+#ifndef MSC_VER
+#define MSC_VER _MSC_VER
+#endif
+#define __DECLSPEC(...)	__declspec(__VA_ARGS__)
+#define __PRAGMA(...)	__progma(__VA_ARGS__)
+#define __BUILTIN(x)		/* nothing */
 #else
-#define __ATTRIBUTE(...)	__declspec(__VA_ARGS__)
+#define __DECLSPEC(...)	/* nothing */
+#define __BUILTIN(x)		/* nothing */
 #endif
 
-#define _WEAK			__ATTRIBUTE(weak)
-#define _PACKED			__ATTRIBUTE(packed)
-#define _UNUSED			__ATTRIBUTE(unused)
-#define _NORETURN		__ATTRIBUTE(noreturn)
-#define _ALIGNED(x)		__ATTRIBUTE(aligned(x))
-#define _VOLATILE		__ATTRIBUTE(volatile)
-#define _CONSTRUCTOR	__ATTRIBUTE(constructor)
-#define _DESTRUCTOR		__ATTRIBUTE(destructor)
-#define _SECTION(x)		__ATTRIBUTE(section(x))
-#define _DLLIMPORT		__ATTRIBUTE(dllimport)
-#define _DLLEXPORT		__ATTRIBUTE(dllexport)
-#define _DEPRECATED		__ATTRIBUTE(deprecated)
-#define _FASTCALL		__ATTRIBUTE(fastcall)
-#define _STDCALL		__ATTRIBUTE(stdcall)
-#define _PURE			__ATTRIBUTE(const)
-#define _CDECL			__ATTRIBUTE(cdecl)
-#define _NAKED			__ATTRIBUTE(naked)
-#define _FORMAT(...)	__ATTRIBUTE(format(__VA_ARGS__))
+#ifdef _CC_HAS_WEAK
+#define _WEAK			__DECLSPEC(weak)
+#else
+#define _WEAK			_WARNING("weak not impelemented on current compiler")
+#endif
+#define _ERROR(x)		__PRAGMA(error(x))
+#define _WARNING(x)		__PRAGMA(warning(x))
+#define _PACKED			__DECLSPEC(packed)
+#define _UNUSED			__DECLSPEC(unused)
+#define _NORETURN		__DECLSPEC(noreturn)
+#define _ALIGNED(x)		__DECLSPEC(aligned(x))
+#define _VOLATILE		__DECLSPEC(volatile)
+#define _CONSTRUCTOR	__DECLSPEC(constructor)
+#define _DESTRUCTOR		__DECLSPEC(destructor)
+#define _SECTION(x)		__DECLSPEC(section(x))
+#define _DLLIMPORT		__DECLSPEC(dllimport)
+#define _DLLEXPORT		__DECLSPEC(dllexport)
+#define _DEPRECATED		__DECLSPEC(deprecated)
+#define _FASTCALL		__DECLSPEC(fastcall)
+#define _STDCALL		__DECLSPEC(stdcall)
+#define _PURE			__DECLSPEC(const)
+#define _CDECL			__DECLSPEC(cdecl)
+#define _NAKED			__DECLSPEC(naked)
+#ifdef _CC_HAS_DECLSPEC_FORMAT
+#define _FORMAT(...)	__DECLSPEC(format(__VA_ARGS__))
+#else
+#define _FORMAT(...)	__DECLSPEC(format(__VA_ARGS__))
+#endif
 
 #define PACKED			_PACKED
 #define UNUSED			_UNUSED
@@ -42,19 +62,13 @@
 #define __fastcall		_FASTCALL
 #endif
 
-#if defined(__GNUC__)// && !defined(_MINGW) // TODO: check gcc version here
-#define __BUILTIN(x)		__builtin_##x
-#else
-#define __BUILTIN(x)		/* nothing */
-#endif
-
-#if defined(__GNUC__) && !defined(_MINGW) // TODO: check gcc version here
+#ifdef _CC_HAS_UNREACHABLE
 #define UNREACHABLE()		__BUILTIN(unreachable())
 #else
 #define UNREACHABLE()		for (;;)
 #endif
 
-#ifdef __GNUC__
+#ifdef _CC_HAS_EXPECT
 #define _EXPECT(x, y)		__BUILTIN(expect(x, y))
 #else
 #define _EXPECT(x, y)		(x)

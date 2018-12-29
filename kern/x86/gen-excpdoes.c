@@ -19,7 +19,7 @@ int main(void)
 	for (i = 0; i < sizeof(excps) / sizeof(excps[0]); i++)
 	{
 		printf("%d: %s...\n", i, excps[i]);
-		fprintf(fout, "void __attribute__((weak)) do_%s(struct iframe *iframe)\n{\n", excps[i]);
+		fprintf(fout, "void _WEAK do_%s(struct iframe *iframe)\n{\n", excps[i]);
 		fprintf(fout, "\tpanic(\"EXCP_%s\");\n}\n\n", strupr(strdup(excps[i])));
 		fprintf(fveh, "#define EXCP_%s\t%d\n", strupr(strdup(excps[i])), i);
 		fprintf(fvec, "\tdo_%s,\n", excps[i]);

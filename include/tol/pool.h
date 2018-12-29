@@ -10,3 +10,5 @@
 #define pool_sizeof(pool)	(array_sizeof((pool)->stk))
 #define pool_alloc(pool)	(*--(pool)->sp)
 #define pool_free(pool, x)	(*(pool)->sp++ = (x))
+#define pool_rested(pool)	((pool)->sp - (pool)->stk)
+#define pool_usage(pool)	(pool_rested(pool) - pool_sizeof(pool))

@@ -4,6 +4,7 @@
 
 	EXTERNC hwintr
 	GLOBALC __intrents
+	GLOBALC intreturn
 
 [SECTION .data]
 __intrents:
@@ -23,6 +24,7 @@ introute:
 	push esp
 	call hwintr
 	add esp, 4
+intreturn:
 	popad
 	pop gs
 	pop fs

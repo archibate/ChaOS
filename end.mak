@@ -3,7 +3,7 @@
 .PHONY: clean
 clean:
 ifdef WIN
-	clean.bat
+	$Dclean.bat
 else
-	false clean not impelemented for unix-liked systems yet
+	rm -rf *.bin *.elf *.out *.sys $(OBJS)
 endif
