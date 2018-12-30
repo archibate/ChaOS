@@ -8,6 +8,6 @@ sigma0.bin: sigma0.sys
 	$(OBJCOPY) -O binary $< $@
 
 sigma0.sys: sigma0.ld $(OBJS)
-	$(LD) $(LDFLAGS) -T sigma0.ld -o $@ $(OBJS) $(LIBS:%=-l%)
+	$(CC) $(CFLAGS) $(LDFLAGS) -T sigma0.ld -o $@ $(OBJS) $(LIBS:%=-l%)
 
 include $Dend.mak

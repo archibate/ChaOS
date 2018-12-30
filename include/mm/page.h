@@ -26,3 +26,4 @@ typedef pa_t pde_t;
 
 #define PGUP(x) ((x + PGSIZE - 1)	& PGMASK)
 #define PGDN(x) ((x)				& PGMASK)
+

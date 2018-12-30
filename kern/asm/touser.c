@@ -20,6 +20,6 @@ void transfer_to_user(ulong pc, ulong sp)
 	asm volatile ("mov %%esp, %0" : "=r" (ksp) :);
 	set_ksp(ksp);
 	
-	asm volatile ("mov %0, %%esp\njmp _intreturn" :: "r" (&ifr));
+	asm volatile ("mov %0, %%esp\njmp intreturn" :: "r" (&ifr));
 	UNREACHABLE();
 }

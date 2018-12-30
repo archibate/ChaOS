@@ -1,5 +1,7 @@
 ; vim: ft=nasm ai
 
+%include	"boot.inc"
+
 	org 0x7e00
 
 [BITS 16]
@@ -35,7 +37,7 @@ enable_32:
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
-	jmp dword 0x0008:kernel
+	jmp dword 0x0008:start32
 	
 delay:
 	in al, 0x64
@@ -73,6 +75,14 @@ idtr0:
 
 msg_setup:
 	db "Seting up kernel...", 0
+
+[BITS 32]
+start32:
+	lea edi, [kernel + KFSIZ]
+	mov ecx, KZSIZ
+	xor eax, eax
+	rep stosb
+	jmp kernel
 
 	times 512-($-$$) db 0
 kernel:

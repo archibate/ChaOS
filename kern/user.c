@@ -37,8 +37,8 @@ void init_user(void)
 	upd_setup_kvm(upd);
 	
 	extern char sigma0_beg[], sigma0_end[];
-	pa_t beg = KV2P((va_t)&sigma0_beg);
-	pa_t end = KV2P((va_t)&sigma0_end);
+	pa_t beg = PGDN(KV2P((va_t)&sigma0_beg));
+	pa_t end = PGUP(KV2P((va_t)&sigma0_end));
 	
 	int stksz = 10 * PGSIZE;
 	

@@ -13,6 +13,7 @@ struct meminfo meminfo =
 	.end = MTEST_END,
 };
 
+#if 0
 void __section(".phys.text") init_boot_meminfo(void)
 {
 	extern void memory_test(ulong *p_start, size_t *p_size);
@@ -21,6 +22,7 @@ void __section(".phys.text") init_boot_meminfo(void)
 	memory_test(&bminfo->beg, &size);
 	bminfo->end = bminfo->beg + size;
 }
+#endif
 
 void init_meminfo(void)
 {

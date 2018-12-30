@@ -1,4 +1,5 @@
 ENTRY(_start)
+OUTPUT_FORMAT(elf32-i386)
 
 UBASE = 0x800000;
 
@@ -28,6 +29,7 @@ SECTIONS
 	.data :
 	{
 		*(.data)
+		*(.note* .comment*)
 	}
 	
 	. = ALIGN(4096);

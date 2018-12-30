@@ -33,8 +33,3 @@ void kern_main(void)
 		stihlt();
 }
 
-void __section(".phys.text") kern_physetup(void)
-{
-	CALL(init_boot_meminfo);
-	CALL(init_bootvm);
-}

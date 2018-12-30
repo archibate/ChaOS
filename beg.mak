@@ -16,8 +16,12 @@ OPTIMIZE=0
 MODES+=32 arch=i386 soft-float
 FUNCTIONS+=no-common no-exceptions no-non-call-exceptions freestanding no-builtin
 WARNINGS+=all no-unused-function implicit-function-declaration
-INCPATH+=. $Dlibc $Dlibcon $Dinclude
+INCPATH+=. $Dlibgcc $Dlibc $Dlibcon $Dinclude
 LIBPATH+=$Dlibgcc $Dlibc $Dlibcon
+
+# These options may not be recognized by MinGW gcc:
+FUNCTIONS+=no-stack-protector
+WARNINGS+=no-error=unused-variable no-error=unused-but-set-variable
 
 #ifndef WIN
 #FUNCTIONS+=no-stack-protector
@@ -26,14 +30,13 @@ LIBPATH+=$Dlibgcc $Dlibc $Dlibcon
 #DEFINES+=_MINGW=1
 #endif
 
-CCFLAGS+=-nostdinc
-CCFLAGS+=$(OPTIMIZE:%=-O%) $(MODES:%=-m%) \
+CFLAGS+=-nostdinc
+CFLAGS+=$(OPTIMIZE:%=-O%) $(MODES:%=-m%) \
 		$(FUNCTIONS:%=-f%) $(WARNINGS:%=-W%) \
 		$(DEFINES:%=-D%) $(INCPATH:%=-I%)
 ASMFLAGS+=$(INCPATH:%=-I%/)
 LDFLAGS+=-s -static -nostdlib
 LDFLAGS+=$(LIBPATH:%=-L%)
-CFLAGS=$(CCFLAGS) $(LDFLAGS)
 
 # compiling rules:
 
@@ -46,6 +49,17 @@ CFLAGS=$(CCFLAGS) $(LDFLAGS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-%.s: %.c
-	$(CC1) -quiet $(CCFLAGS) -o .$@ $<
-	$(OBJCOPY) -O elf32-i386 .$@ $@
+%.i: %
+	$(CC) $(CFLAGS) -xc -D_GPCPP_=1 -E -P -o $@ $<
+
+%.o: %.S
+	$(CC) $(CFLAGS) -D__ASSEMBLER__=1 -D_GPCPP_=1 -c -o $@ $<
+
+%.d: %.S
+	$(CC) $(CFLAGS) -D__ASSEMBLER__=1 -D_GPCPP_=1 -M -o $@ $<
+
+%.d: %.asm
+	$(ASM) $(ASMFLAGS) -M -o $*.o $< > $@
+
+%.d: %.c
+	$(CC) $(CFLAGS) -M -o $@ $<

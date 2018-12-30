@@ -1,6 +1,9 @@
 ; vim: ft=nasm ai
 
-CYLS	equ	6
+%include	"boot.inc"
+
+BOOTSZ	equ	0x400
+CYLS	equ	(KFSIZ+BOOTSZ+36*512-1)/(36*512) ; 36*CYLS sectors
 
 	org 0x7c00
 

@@ -17,10 +17,6 @@ static void vga_con_enter(struct console *con)
 	con_setcur(con, d.rem, d.quot);
 }
 
-static void unused_con_enter(struct console *con)
-{
-}
-
 static void vga_con_leave(struct console *con)
 {
 	int off = con->cy * con->scrnx + con->cx;

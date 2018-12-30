@@ -1,7 +1,7 @@
 D=./
 ALL=chaos.img
 include $Dbeg.mak
-DIRS=boot sigma0 kern libc libcon
+DIRS=libgcc libc libcon sigma0 kern boot
 
 .PHONY: run
 run: chaos.img
@@ -20,17 +20,20 @@ bochsrun: chaos.img
 bochsdbg: chaos.img
 	bochsdbg -qf bochsrc.bxrc
 
+chaos.img: $(DIRS)
 chaos.img: boot/boothead.bin kern/kernel.bin
 ifdef WIN
 	copy /b boot\boothead.bin+kern\kernel.bin $@
 else
-	cat $^ > $@
+	rm -rf `readlink $@`
+	rm -rf $@
+	ln -s /tmp/4300 $@
+	dd if=/dev/zero of=$@ count=1440 bs=1024
+	cat boot/boothead.bin kern/kernel.bin | dd of=$@ conv=notrunc count=1440 bs=1024
 endif
 
-#kern/kernel.bin: libc/libc.a libcon/libcon.a init/init.bin
-
-.PHONY: $(foreach x, $(DIRS), $x/ $x/*)
-$(foreach x, $(DIRS), $x/%):
-	make -C $(@D) $(@F)
+.PHONY: $(DIRS)
+$(DIRS):
+	make -C $@
 
 include $Dend.mak

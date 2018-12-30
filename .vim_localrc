@@ -1,0 +1,25 @@
+au BufNewFile,BufRead .vim_localrc set ft=vim
+au BufNewFile,BufRead *.c,*.h syn keyword Type uchar ushort uint ulong soff_t ino_t pid_t wstat_t dostime_t dosdate_t dosmode_t
+
+set ts=4
+set sw=4
+set sts=4
+set fdm=marker
+
+let g:syntastic_c_include_dirs = ['libgcc', 'libcon', 'include']
+let g:syntastic_enable_highlighting = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_w = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_c_remove_include_errors = 1
+let g:syntastic_c_check_header = 1
+let g:syntastic_c_auto_refresh_includes = 1
+let g:syntastic_enable_signs = 0
+let g:syntastic_aggregate_errors = 1
+
+nnoremap <F5> :wa<CR>:!make run<CR><CR>
+nnoremap <F6> :wa<CR>:!make debug<CR><CR>
+nnoremap <F7> :wa<CR>:!make bochsrun<CR><CR>
+
+inoremap jk <ESC>

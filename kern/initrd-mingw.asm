@@ -5,7 +5,7 @@
 	GLOBALC sigma0_beg
 	GLOBALC sigma0_end
 
-[SECTION .data]
+[SECTION .sigma0.data]
 	alignb 4096
 sigma0_beg:
 	incbin "../sigma0/sigma0.bin"
