@@ -1,4 +1,5 @@
 #include <l4/syscall.h>
+#include <l4/proc.h>
 #include <printk.h>
 
 long system_call(int nr, long a1, long a2, long a3)

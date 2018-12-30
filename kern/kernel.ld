@@ -43,6 +43,7 @@ SECTIONS
 		*(.note* .comment*)
 		. = ALIGN(4096);
 		*(.sigma0.data)
+		. = ALIGN(4096);
 	}
 	
 	. = ALIGN(4096);

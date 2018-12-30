@@ -21,7 +21,6 @@ bochsdbg: chaos.img
 	bochsdbg -qf bochsrc.bxrc
 
 chaos.img: $(DIRS)
-chaos.img: boot/boothead.bin kern/kernel.bin
 ifdef WIN
 	copy /b boot\boothead.bin+kern\kernel.bin $@
 else

@@ -65,4 +65,5 @@ dkms.conf
 # Customed
 z_tools/
 bochsout.txt
+*mzsiz.*
 *.ign

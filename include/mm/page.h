@@ -1,7 +1,21 @@
 #pragma once
 
 #include <inttypes.h>
-#include <asm/page.h>
+#include <asm/page-bits.h>
+#include <bitops.h>
+
+#define PGSIZE  ENTSOF(PGWID)
+#define PTENTS  ENTSOF(PTWID)
+#define PDENTS  ENTSOF(PDWID)
+#define PTSIZE  (PTENTS*sizeof(long))
+#define PDSIZE  (PDENTS*sizeof(long))
+
+#define PGMASK	MASKOF(PGWID)
+#define PTMASK	MASKOF(PTWID)
+#define PDMASK	MASKOF(PDWID)
+#define PGOFFM	OFFMOF(PGWID)
+#define PTOFFM	OFFMOF(PTWID)
+#define PDOFFM	OFFMOF(PDWID)
 
 typedef ulong va_t, pgva_t;
 typedef ulong pa_t, pgpa_t;
@@ -24,6 +38,7 @@ typedef pa_t pde_t;
 #define PDE_VALID(pde) ((pde) & PDE_P)
 #define PTE_VALID(pte) ((pte) & PTE_P)
 
-#define PGUP(x) ((x + PGSIZE - 1)	& PGMASK)
-#define PGDN(x) ((x)				& PGMASK)
+#define PGUP(x)		((x + PGSIZE - 1) & PGMASK)
+#define PGDN(x)		((x) & PGMASK)
+#define PGOFF(x)	((x) & PGOFFM)
 

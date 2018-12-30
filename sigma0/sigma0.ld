@@ -24,12 +24,13 @@ SECTIONS
 	{
 		*(.stabstr)
 	}
-	
+
 	. = ALIGN(4096);
 	.data :
 	{
 		*(.data)
 		*(.note* .comment*)
+		. = ALIGN(4096);
 	}
 	
 	. = ALIGN(4096);
