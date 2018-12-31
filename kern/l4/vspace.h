@@ -13,6 +13,7 @@ typedef uint pgattr_t; // T: may not be a good name, try pgaccess_t??
 #define PGA_URW	(PTE_P | PTE_W | PTE_U)
 #define PGAMASK	(PTE_P | PTE_W | PTE_U)
 #define PGINFO(pa, type)	PTE(pa, type)
+#define PGI_PADR(pgi)		((pgi) & PGMASK)
 #define PGI_PGA(pgi)		((pgi) & PGAMASK)
 #define PGI_VALID(pgi)		PTE_VALID(pgi)
 
@@ -48,6 +49,26 @@ static pginfo_t vs_unmap(vspace_t *vs, va_t va)
 {
 	assert(vs->pgd);
 	return pd_unmap(vs->pgd, va);
+}
+
+#include <mm/pmm.h>
+
+int vs_map_s(vspace_t *vs, va_t va, pginfo_t pginfo)
+{
+	pginfo = vs_map(vs, va, pginfo);
+	if (!PGI_VALID(pginfo))
+		return 0;
+	try_free_ppage(PGI_PADR(pginfo));
+	return 1;
+}
+
+int vs_unmap_s(vspace_t *vs, va_t va)
+{
+	pginfo_t pginfo = vs_unmap(vs, va);
+	if (!PGI_VALID(pginfo))
+		return 0;
+	try_free_ppage(PGI_PADR(pginfo));
+	return 1;
 }
 
 #include <mm/mmu.h>

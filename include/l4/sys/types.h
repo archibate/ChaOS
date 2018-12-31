@@ -7,5 +7,3 @@
 
 typedef uint pid_t;
 typedef uint chid_t;
-
-#include <l4/sys/msginfo.h>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <l4/sys/types.h>
+#include <l4/sys/msginfo.h>
 
 static int l4Call(chid_t chid,
 		const l4MsgInfo_t *mSnd,

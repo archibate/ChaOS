@@ -1,8 +1,8 @@
 #include <l4/vspace.h>
 #include <l4/sys/types.h>
+#include <l4/sys/chans.h>
 #include <tol/region.h>
 #include <tol/maxmin.h>
-#include <mm/pmm.h>
 #include <assert.h>
 #include <memory.h>
 #include <errno.h>
@@ -78,25 +78,31 @@ void activate(tcb_t *tcb)
 
 
 #define swap(x, y) do { \
-	(x) ^= (y); \
-	(y) ^= (x); \
-	(x) ^= (y); \
+	typeof(x) tmp = (x); \
+	(x) = (y); \
+	(y) = tmp; \
 } while (0)
 
 
+#define TMPADR (KBASE+
 
-void non_aligned_copy(va_t wbeg, va_t sbeg, va_t send, int rev)
+void non_aligned_copy(vspace_t *svs, vspace_t *wvs,
+		va_t wbeg, va_t sbeg, va_t send, int rev)
 {
 	size_t len = send - sbeg;
-	if (rev)
+	if (!len)
+		return;
+	if (rev) {
 		swap(wbeg, sbeg);
+		swap(wvs, svs);
+	}
+	pginfo_t pginfo = vs_getmap(svs, wbeg);
+	assert(PGI_VALID(pginfo));
+	vs_map_s(wvs, KTMPADR, pginfo);
+	pginfo = vs_getmap(svs, sbeg);
+	assert(PGI_VALID(pginfo));
+	vs_map_s(svs, KTMPADR, pginfo);
 	memcpy((void*)wbeg, (void*)sbeg, len);
-}
-
-
-void vs_map_s(vspace_t *vs, va_t va, pginfo_t pginfo)
-{
-	try_free_ppage(vs_map(vs, va, pginfo));
 }
 
 //#define HAS_PA_FAST_COPY 1
@@ -104,8 +110,12 @@ void page_aligned_copy(vspace_t *svs, vspace_t *wvs,
 		pgva_t wbeg, pgva_t sbeg, pgva_t send, int rev)
 {
 	size_t len = send - sbeg;
-	if (rev)
+	if (!len)
+		return;
+	if (rev) {
 		swap(wbeg, sbeg);
+		swap(wvs, svs);
+	}
 #if HAS_PA_FAST_COPY
 	for (; len > 0; len -= PGSIZE)
 	{
@@ -170,28 +180,32 @@ void copy_region_s2w(vspace_t *svs, vspace_t *wvs,
 
 
 
+void new_tcb(void)
+{
+}
 
 
-#define $wait_queue (_waiter->queue)
+
+
+
+
+
 
 int l4_call(tcb_t *sender, chan_t *w_channel, int noblock)
 {
 	tcb_t *waiter = w_channel->owner;
-	if (!waiter)
-		return -ESRCH;
-
 	tcb_queue_t *wait_queue = &w_channel->queue;
 
-	if (waiter->state == ONWAIT)
+	if (waiter)// && waiter->state == ONWAIT)
 	{
+		assert(waiter->state == ONWAIT);
 		ipc_copy_s2w(sender, waiter);
-		if (!noblock)
-			block(sender, ONRECV);
+		block(sender, ONRECV);
 		activate(waiter);
 	}
 	else
 	{
-		if (!noblock)
+		if (noblock)
 			return -EWBLOCK;
 		block(sender, ONSEND);
 		ch_queue_append(wait_queue, sender);
@@ -210,7 +224,11 @@ int l4_softirq(chan_t *w_channel)
 
 int l4_wait(tcb_t *waiter, chan_t *w_channel)
 {
-	w_channel->owner = waiter;
+	if (w_channel->owner)
+		return -EOWCHAN;
+	else
+		w_channel->owner = waiter;
+
 	tcb_queue_t *wait_queue = &w_channel->queue;
 
 	if (ch_queue_empty(wait_queue))
@@ -220,6 +238,7 @@ int l4_wait(tcb_t *waiter, chan_t *w_channel)
 	else
 	{
 		tcb_t *sender = ch_queue_pop(wait_queue);
+		assert(sender->state == ONSEND);
 		ipc_copy_s2w(sender, waiter);
 		block(sender, ONRECV);
 	}
@@ -228,9 +247,11 @@ int l4_wait(tcb_t *waiter, chan_t *w_channel)
 }
 
 
-int l4_reply(chan_t *w_channel, tcb_t *recver)
+int l4_reply(tcb_t *waiter, chan_t *w_channel, tcb_t *recver)
 {
-	tcb_t *waiter = w_channel->owner;
+	if (w_channel->owner != waiter)
+		return -EOWCHAN;
+	w_channel->owner = 0;
 
 	if (recver->state != ONRECV)
 		return -ENCONN;
@@ -238,6 +259,17 @@ int l4_reply(chan_t *w_channel, tcb_t *recver)
 	ipc_copy_w2r(waiter, recver);
 	activate(recver);
 	return 0;
+}
+
+
+int l4_reply_wait(tcb_t *waiter, chan_t *w_channel, tcb_t *recver)
+{
+	int ret = l4_reply(waiter, w_channel, recver);
+
+	if (ret < 0)
+		return ret;
+	else
+		return l4_wait(waiter, w_channel);
 }
 
 
@@ -290,7 +322,6 @@ channel_t channels[MAX_CHID];
 
 #define CH(chid)	(&channels[chid])
 #define P(pid)		(&procs[pid])
-//#define PCURR		((tcb_t*)_curr_tcb)
 #define PCURR		P(0)
 
 
@@ -330,7 +361,13 @@ void system_call(sysnr_t nr, long *a0, long *a1, long *a2, long *a3)
 		break;
 	case L4SYS_REPLY:
 		printk("l4Reply(chid=%d, pid=%d)", *a0, *a3);
-		*a0 = l4_reply(CH(*a0), P(*a1));
+		*a0 = l4_reply(PCURR, CH(*a0), P(*a3));
+		break;
+	case L4SYS_REPLY_WAIT:
+		printk("l4ReplyWait()");
+		*a0 = l4_reply_wait(PCURR, CH(*a0), P(*a3));
+		*a1 = PCURR->reg.beg;
+		*a2 = PCURR->reg.end;
 		break;
 	default:
 		printk("l4NOSYS(nr=%d,%ld,%ld,%ld,%ld)", nr, *a0, *a1, *a2, *a3);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <x86/cregs.h>
-#include <bitops.h>
+#include <tol/bitops.h>
 
 #define mmu_enablevm()	setcr0(getcr0() | CR0_PG)
 #define mmu_disablevm()	setcr0(getcr0() & ~CR0_PG)

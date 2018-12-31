@@ -1,14 +1,16 @@
 #pragma once
 
+#ifndef _GPCPP_
 #include <inttypes.h>
+#endif
 #include <asm/page-bits.h>
-#include <bitops.h>
+#include <tol/bitops.h>
 
 #define PGSIZE  ENTSOF(PGWID)
 #define PTENTS  ENTSOF(PTWID)
 #define PDENTS  ENTSOF(PDWID)
-#define PTSIZE  (PTENTS*sizeof(long))
-#define PDSIZE  (PDENTS*sizeof(long))
+#define PTSIZE  (PTENTS*__WORDSIZE__)
+#define PDSIZE  (PDENTS*__WORDSIZE__)
 
 #define PGMASK	MASKOF(PGWID)
 #define PTMASK	MASKOF(PTWID)
@@ -17,6 +19,7 @@
 #define PTOFFM	OFFMOF(PTWID)
 #define PDOFFM	OFFMOF(PDWID)
 
+#ifndef _GPCPP_
 typedef ulong va_t, pgva_t;
 typedef ulong pa_t, pgpa_t;
 typedef ulong vpn_t;
@@ -24,6 +27,7 @@ typedef ulong pfn_t;
 typedef uint pgoff_t;
 typedef pa_t pte_t;
 typedef pa_t pde_t;
+#endif
 
 #define PFN(a)    ((a) >> PGWID)
 #define PDI(a)    (PFN(a) >> PTWID)
