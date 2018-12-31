@@ -9,7 +9,6 @@ void vspace_newinit(vspace_t *vs)
 	pde_t *pgd = (pde_t*)KP2V(alloc_ppd());
 	upd_setup_kvm(pgd);
 	vs->pgd = pgd;
-	vs_map(vs, PGDN(KSTKTOP), PGINFO(zalloc_ppage(), PGA_URO));
 }
 
 void vspace_delete(vspace_t *vs)

@@ -19,6 +19,9 @@
 
 typedef ulong va_t, pgva_t;
 typedef ulong pa_t, pgpa_t;
+typedef ulong vpn_t;
+typedef ulong pfn_t;
+typedef uint pgoff_t;
 typedef pa_t pte_t;
 typedef pa_t pde_t;
 

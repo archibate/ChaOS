@@ -33,7 +33,7 @@ void hwintr(struct iframe *iframe)
 	if (n >= INTR_SWI0 && n < INTR_SWIMAX)
 	{
 		uint nr = n - INTR_SWI0;
-		iframe->ax = system_call(nr, iframe->ax, iframe->cx, iframe->dx);
+		system_call(nr, &iframe->ax, &iframe->cx, &iframe->dx, &iframe->bx);
 		return;
 	}
 	

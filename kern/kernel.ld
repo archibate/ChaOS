@@ -1,8 +1,10 @@
+#include <mm/kbase.h>
+
 ENTRY(_start)
 OUTPUT_FORMAT("elf32-i386")
 
-KPBEG = 0x8000;
-KBASE = 0xc0000000;
+/*KPBEG = 0x8000;*/
+/*KBASE = 0xc0000000;*/
 
 #define PSEC(sec) sec :
 #define VSEC(sec) sec : AT(ADDR(sec) - KBASE)
@@ -10,7 +12,7 @@ KBASE = 0xc0000000;
 /* https://github.com/archibate/jos/blob/master/lab4/partB/kern/kernel.ld */
 SECTIONS
 {
-	. = KPBEG;
+	. = KCODBEG;
 
 	PSEC(.phys)
 	{

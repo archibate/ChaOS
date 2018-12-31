@@ -13,6 +13,7 @@ CC1=cc1
 OBJCOPY=objcopy
 
 OPTIMIZE=0
+DEFINES+=__WORDSIZE__=4
 MODES+=32 arch=i386 soft-float
 FUNCTIONS+=no-common no-exceptions no-non-call-exceptions freestanding no-builtin
 WARNINGS+=all no-unused-function implicit-function-declaration
@@ -63,3 +64,6 @@ LDFLAGS+=$(LIBPATH:%=-L%)
 
 %.d: %.c
 	$(CC) $(CFLAGS) -M -o $@ $<
+
+%.d: %
+	$(CC) $(CFLAGS) -xc -D_GPCPP_=1 -M -MT $*.i -P -o $@ $<

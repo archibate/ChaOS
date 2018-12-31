@@ -39,7 +39,7 @@ void init_user(void)
 	size_t fsiz = PGUP(end - beg);
 	size_t zsiz = PGUP(S0ZSIZ);
 
-	printk(KL_INFO "sigma0: fsiz=%#x, zsiz=%#x", fsiz, zsiz);
+	printk(KL_INFO "sigma0: fsiz=%#lx, zsiz=%#lx", fsiz, zsiz);
 
 	vspace_t vs;
 	vspace_newinit(&vs);

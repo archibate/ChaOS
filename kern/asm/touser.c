@@ -3,6 +3,7 @@
 #include <asm/setksp.h>
 #include <x86/eflags.h>
 #include <x86/gdt.h>
+#include <mm/kbase.h>
 #include <ccutils.h>
 #include <printk.h>
 
@@ -16,9 +17,10 @@ void transfer_to_user(ulong pc, ulong sp)
 	ifr.sp = sp;
 	ifr.eflags = FL_1F | FL_IOPL(3);
 	
-	ulong ksp;
-	asm volatile ("mov %%esp, %0" : "=r" (ksp) :);
-	set_ksp(ksp);
+	//ulong ksp;
+	//asm volatile ("mov %%esp, %0" : "=r" (ksp) :);
+	//set_ksp(ksp);
+	set_ksp(KSTKTOP);
 	
 	asm volatile ("mov %0, %%esp\njmp intreturn" :: "r" (&ifr));
 	UNREACHABLE();

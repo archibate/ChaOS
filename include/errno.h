@@ -154,3 +154,4 @@
 #define ESTAGE14	152	// IPC stage 14 dismatched
 #define ESTAGE15	153	// IPC stage 15 dismatched
 #define EBADUS	154	// Bad user argument given to server
+#define ENCONN	155	// Target connection closed

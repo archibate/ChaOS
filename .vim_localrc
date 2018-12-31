@@ -1,5 +1,6 @@
 au BufNewFile,BufRead .vim_localrc set ft=vim
-au BufNewFile,BufRead *.c,*.h syn keyword Type uchar ushort uint ulong soff_t ino_t pid_t wstat_t dostime_t dosdate_t dosmode_t
+au BufNewFile,BufRead *.c,*.h syn keyword Type uchar ushort uint ulong soff_t iovec_t ino_t pid_t chid_t wstat_t dostime_t dosdate_t dosmode_t
+au BufNewFile,BufRead *.c,*.h syn keyword Constant ENOCAP ENOTCAP
 
 set ts=4
 set sw=4

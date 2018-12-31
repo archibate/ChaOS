@@ -8,6 +8,7 @@ OBJS=x86/entry.o x86/gdt.o x86/idt.o x86/tss.o x86/memtest.o \
 	 mm/minfo.o mm/bootvm.o mm/uvm.o mm/pmm.o mm/vmm.o \
 	 drv/pic.o drv/pit.o drv/vga.o asm/touser.o \
 	 l4/syscall.o l4/vspace.o
+DEPISRC+=kernel.ld.i
 include $Ddep.mak
 
 s0mzsiz.h: $Dsigma0/sigma0.sys

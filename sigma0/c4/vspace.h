@@ -22,7 +22,7 @@ typedef struct vspace
 {
 	pgdir_t pgd; // Pointer to Page Directory
 }
-vspace_t, proc_vspace_t;
+vspace_t;
 
 
 void vspace_newinit(vspace_t *vs);
@@ -50,6 +50,7 @@ static pginfo_t vs_unmap(vspace_t *vs, va_t va)
 	return pd_unmap(vs->pgd, va);
 }
 
+#if 0
 #include <mm/mmu.h>
 
 static void vspace_use(vspace_t *vs)
@@ -59,3 +60,4 @@ static void vspace_use(vspace_t *vs)
 }
 
 /* T: vs_mapcap(vs, vstart, cap) */
+#endif
