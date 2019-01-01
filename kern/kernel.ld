@@ -38,21 +38,21 @@ SECTIONS
 		*(.stabstr)
 	}
 	
-	. = ALIGN(4096);
+	. = ALIGN(PGSIZE);
 	VSEC(.data)
 	{
-		*(.data)
+		*(.data .data.*)
 		*(.note* .comment*)
-		. = ALIGN(4096);
-		*(.sigma0.data)
-		. = ALIGN(4096);
+		. = ALIGN(PGSIZE);
+		*(.initrd.data)
+		. = ALIGN(PGSIZE);
 	}
 	
-	. = ALIGN(4096);
+	. = ALIGN(PGSIZE);
 	VSEC(.bss)
 	{
-		*(.bss)
-		. = ALIGN(4096);
+		*(.bss .bss.*)
+		. = ALIGN(PGSIZE);
 	}
 	
 	/DISCARD/ :

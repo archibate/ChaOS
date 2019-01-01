@@ -4,6 +4,6 @@
 #include <ccutils.h>
 
 #include "excpdoes.inl"
-excp_vec_t excp_vecs[NEXCPS] = {
+const excp_vec_t excp_vecs[NEXCPS] = {
 #include "excpvecs.inl"
 };

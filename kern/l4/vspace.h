@@ -53,7 +53,7 @@ static pginfo_t vs_unmap(vspace_t *vs, va_t va)
 
 #include <mm/pmm.h>
 
-int vs_map_s(vspace_t *vs, va_t va, pginfo_t pginfo)
+static int vs_map_s(vspace_t *vs, va_t va, pginfo_t pginfo)
 {
 	pginfo = vs_map(vs, va, pginfo);
 	if (!PGI_VALID(pginfo))
@@ -62,7 +62,7 @@ int vs_map_s(vspace_t *vs, va_t va, pginfo_t pginfo)
 	return 1;
 }
 
-int vs_unmap_s(vspace_t *vs, va_t va)
+static int vs_unmap_s(vspace_t *vs, va_t va)
 {
 	pginfo_t pginfo = vs_unmap(vs, va);
 	if (!PGI_VALID(pginfo))

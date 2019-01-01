@@ -4,4 +4,4 @@
 
 struct iframe;
 typedef void (*excp_vec_t)(struct iframe *);
-extern excp_vec_t excp_vecs[NEXCPS];
+extern const excp_vec_t excp_vecs[NEXCPS];

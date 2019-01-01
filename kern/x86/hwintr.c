@@ -11,10 +11,12 @@
 void hwintr(struct iframe *iframe)
 {
 	uint n = iframe->intnr;
-	printk(KL_DEBUG "hwintr(%d=%#x)", n);
+	printk(KL_DEBUG "hwintr of %d(%#x)", n, n);
 	
 	if (n < ARRAY_SIZEOF(excp_vecs))
 	{
+		if (!excp_vecs[n])
+			panic("Unhandled exception INT %d(%#x)", n, n);
 		excp_vecs[n](iframe);
 		return;
 	}
@@ -33,7 +35,7 @@ void hwintr(struct iframe *iframe)
 	if (n >= INTR_SWI0 && n < INTR_SWIMAX)
 	{
 		uint nr = n - INTR_SWI0;
-		system_call(nr, &iframe->ax, &iframe->cx, &iframe->dx, &iframe->bx);
+		system_call(nr, &iframe->mtr.ax, &iframe->mtr.cx, &iframe->mtr.dx, &iframe->mtr.bx);
 		return;
 	}
 	

@@ -1,7 +1,7 @@
 D=./
 ALL=chaos.img
 include $Dbeg.mak
-DIRS=libgcc libc libcon sigma0 kern boot
+DIRS=libgcc libc libcon sigma0 roottask kern boot
 
 .PHONY: run
 run: chaos.img
@@ -35,4 +35,7 @@ endif
 $(DIRS):
 	make -C $@
 
-include $Dend.mak
+clean:
+	for x in $(DIRS); do make -C $$x $@; done
+
+#include $Dend.mak

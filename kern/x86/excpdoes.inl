@@ -68,11 +68,15 @@ void _WEAK do_general_protection(struct iframe *iframe)
 	panic("EXCP_GENERAL_PROTECTION");
 }
 
+#if 0
 #include <x86/cregs.h>
 void _WEAK do_page_fault(struct iframe *iframe)
 {
 	panic("EXCP_PAGE_FAULT: cr2=%p", getcr2());
 }
+#else
+extern void do_page_fault(struct iframe *iframe);
+#endif
 
 void _WEAK do_reserved_exception(struct iframe *iframe)
 {

@@ -12,3 +12,4 @@ for u in range(-5, 5):
             u, v = f(u, v)
 
 print('\033[0m')
+print('KMGTPEZY')

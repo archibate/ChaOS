@@ -1,4 +1,4 @@
 ; vim: ft=nasm ai
 
 %include	"kmzsiz.inc"
-KFSIZ	equ	(KMSIZ-KZSIZ)
+;KFSIZ	equ	(KMSIZ-KZSIZ)
